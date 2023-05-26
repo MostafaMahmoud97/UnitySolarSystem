@@ -7,6 +7,7 @@ public class MovementCameraScript : MonoBehaviour
     [SerializeField] private Camera cam;
     private Vector3 previousPosition;
     private Vector3 previousRotation;
+    private bool CameraActivation;
 
 
     [Header("Zoom Controller")]
@@ -19,17 +20,21 @@ public class MovementCameraScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        CameraActivation = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.ChangePosition();
+        if (CameraActivation)
+        {
+            this.ChangePosition();
 
-        this.ChangeRotation();
+            this.ChangeRotation();
 
-        this.ZoomInAndOut();
+            this.ZoomInAndOut();
+        }
+        
     }
     public void ChangePosition()
     {
@@ -81,5 +86,10 @@ public class MovementCameraScript : MonoBehaviour
         }
 
         cam.fieldOfView = Mathf.Clamp(cam.fieldOfView, MinSize, MaxSize);
+    }
+
+    public void CameraActivationMethod()
+    {
+        this.CameraActivation = !this.CameraActivation;
     }
 }

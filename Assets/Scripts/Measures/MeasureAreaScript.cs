@@ -28,6 +28,7 @@ public class MeasureAreaScript : MonoBehaviour
 
     //Select Any Point
     private GameObject PointArea;
+    private AreaClass SelectedAreaClass;
     private bool checkSelectedPoint;
     private bool checkMovePoint;
 
@@ -35,6 +36,7 @@ public class MeasureAreaScript : MonoBehaviour
     [Header("Area Description Panel")]
     [SerializeField] private GameObject AreaDescriptionPanel;
     [SerializeField] private Text LabelTotalArea;
+    [SerializeField] private Text LabelArea;
     private float totalArea;
 
 
@@ -371,6 +373,20 @@ public class MeasureAreaScript : MonoBehaviour
     private void ManageCalcTotalArea()
     {
         totalArea = 0;
+        float area = 0;
+        //Calac selected Point area
+        if(PointArea != null)
+        {
+            AreaClass areaClassX = GetAreaClassFromPoint(PointArea);
+            if(areaClassX.Targets.Count >= 3)
+            {
+                this.CalcSlops(areaClassX);
+                this.ConvertVec3ToVec2New(areaClassX);
+                //Debug.Log("Area : "+CalcAreaOfPoligon(areaClass));
+                area = CalcAreaOfPoligon(areaClassX);
+            }
+        }
+        //Calc total Area
         foreach (AreaClass areaClass in areaClasses)
         {
             if (areaClass.MesurePoints.Count > 1)
@@ -391,7 +407,8 @@ public class MeasureAreaScript : MonoBehaviour
 
         if (totalArea != 0)
         {
-            ShowAreaDescriptionPanel(true, totalArea);
+
+            ShowAreaDescriptionPanel(true, totalArea,area);
         }
     }
 
@@ -447,8 +464,9 @@ public class MeasureAreaScript : MonoBehaviour
 
     //==============================================>
     //Calc Area
-    private void ShowAreaDescriptionPanel(bool check, float totalArea)
+    private void ShowAreaDescriptionPanel(bool check, float totalArea,float area)
     {
+        LabelArea.text = "Area : "+Math.Round(area, 2) + " m\u00b2";
         LabelTotalArea.text = "Total Area : "+Math.Round(totalArea,2) + " m\u00b2";
     }
 
@@ -482,5 +500,20 @@ public class MeasureAreaScript : MonoBehaviour
                 
             }
         }
+    }
+
+    private AreaClass GetAreaClassFromPoint(GameObject PointSelected)
+    {
+        for (int i = 0; i < areaClasses.Count; i++)
+        {
+            for (int j = 0; j < areaClasses.ElementAt(i).MesurePoints.Count; j++)
+            {
+                if (PointSelected == areaClasses.ElementAt(i).MesurePoints.ElementAt(j))
+                {
+                    return areaClasses.ElementAt(i);
+                }
+            }
+        }
+        return null;
     }
 }

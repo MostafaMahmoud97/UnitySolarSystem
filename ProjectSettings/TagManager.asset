@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Start_Point_Area
   - PointArea
+  - SolarPanel
+  - SolarPanelPosition
   layers:
   - Default
   - TransparentFX
