@@ -8,6 +8,8 @@ TagManager:
   - PointArea
   - SolarPanel
   - SolarPanelPosition
+  - Inverter
+  - HVAC
   layers:
   - Default
   - TransparentFX

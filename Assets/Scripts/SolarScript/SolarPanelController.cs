@@ -1,8 +1,10 @@
 using Microsoft.Maps.Unity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SolarPanelController : MonoBehaviour
 {
@@ -14,10 +16,18 @@ public class SolarPanelController : MonoBehaviour
     [SerializeField] private Material SolarMaterial;
     [SerializeField] private RightPanelActivateScript RightPanelScript;
     [SerializeField] private GameObject ControllerSolarPanel;
+    [SerializeField] private MeasureAreaScript measureAreaScript;
 
 
     [Header("Map Render")]
     public GameObject map;
+
+    [Header("Suggest Panel Message")]
+    [SerializeField] private GameObject SuggestationPanel;
+    [SerializeField] private Text SuggestSolarPanelText;
+    [SerializeField] private Text CurrentSolarPanelText;
+    [SerializeField] private GameObject WarningPanel;
+    [SerializeField] private Text WarningText;
 
 
     private RaycastHit raycastHit;
@@ -28,10 +38,13 @@ public class SolarPanelController : MonoBehaviour
     private bool AddPanelCheck;
     private bool MovePanelCheck;
 
-    private bool CheckRotateUp; 
-    private bool CheckRotateLeft; 
-    private bool CheckRotateRight; 
-    private bool CheckRotateDown;
+    private bool CheckRotateXAxisUp;
+    private bool CheckRotateXAxisDown;
+    private bool CheckRotateZAxisUp; 
+    private bool CheckRotateZAxisDown;
+    private bool CheckRotateYAxisUp;
+    private bool CheckRotateYAxisDown;
+
 
     private bool CheckContinueClickMouse;
     private bool AddInitPositionPanelsCheck;
@@ -39,6 +52,9 @@ public class SolarPanelController : MonoBehaviour
     private List<GameObject> PositionPanelsUp;
     private List<GameObject> PositionPanelsDown;
     private List<GameObject> PositionPanelsLift;
+
+    private int NumberCurrentPanels;
+    private int NumberSuggestPanels;
 
 
 
@@ -56,6 +72,9 @@ public class SolarPanelController : MonoBehaviour
 
         GroupSelectedSolarPanel = new GameObject("GroupSelectedPanel");
         SelectedSolarPanels = new List<GameObject>();
+
+        NumberCurrentPanels = 0;
+        NumberSuggestPanels = 0;
     }
 
     // Start is called before the first frame update
@@ -74,23 +93,35 @@ public class SolarPanelController : MonoBehaviour
         {
             AddPositionSolarPanel();
         }
+        CalcNumberSuggestPanel();
     }
 
     private void FixedUpdate()
     {
         MoveSelectedSolarMethod();
-        RotateUp();
-        RotateDown();
-        RotateLeft();
-        RotateRight();
+        RotateXAxisUp();
+        RotateXAxisDown();
+        RotateZAxisUp();
+        RotateZAxisDown();
+        RotateYAxisUp();
+        RotateYAxisDown();
     }
 
     public void AddPanelCheckActive()
     {
-        AddPanelCheck = true;
-        InitAddNewSolar();
-        if (ControllerSolarPanel.activeInHierarchy)
-            ActiveAndInactiveRightControllerPanel();
+        
+        if(NumberSuggestPanels > NumberCurrentPanels)
+        {
+            AddPanelCheck = true;
+            InitAddNewSolar();
+            if (ControllerSolarPanel.activeInHierarchy)
+                ActiveAndInactiveRightControllerPanel();
+        }
+        else
+        {
+            ShowWarningLetterPanel("You Can't Add Solar Panel Number Suggest : " + NumberSuggestPanels + " And Curent Number : " + NumberCurrentPanels);
+        }
+        
         
     }
 
@@ -101,8 +132,9 @@ public class SolarPanelController : MonoBehaviour
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if(map.GetComponent<MapRenderer>().Raycast(ray,out MapRendererRaycastHit hitInfo))
             {
-                Instantiate(SolarPanel, new Vector3(hitInfo.Point.x, hitInfo.Point.y + 0.0011622f, hitInfo.Point.z), Quaternion.identity);
+                Instantiate(SolarPanel, new Vector3(hitInfo.Point.x, hitInfo.Point.y + 0.00169f, hitInfo.Point.z), Quaternion.identity);
                 AddPanelCheck = false;
+                NumberCurrentPanels++;
             }
         }
     }
@@ -207,7 +239,7 @@ public class SolarPanelController : MonoBehaviour
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if(map.GetComponent<MapRenderer>().Raycast(ray,out MapRendererRaycastHit hitInfo))
             {
-                GroupSelectedSolarPanel.transform.position = new Vector3(hitInfo.Point.x, hitInfo.Point.y + 0.0011643f, hitInfo.Point.z);
+                GroupSelectedSolarPanel.transform.position = new Vector3(hitInfo.Point.x, hitInfo.Point.y + 0.00169f, hitInfo.Point.z);
                 if (Input.GetMouseButtonDown(0))
                 {
                     MovePanelCheck = false;
@@ -217,77 +249,116 @@ public class SolarPanelController : MonoBehaviour
         }
     }
 
-    public void CheckRotateUpMethodActive()
+    public void CheckRotateXAxisUpMethodActive()
     {
-        this.CheckRotateUp = true;
+        this.CheckRotateXAxisUp = true;
     }
 
-    public void CheckRotateUpMethodInactive()
+    public void CheckRotateXAxisUpMethodInactive()
     {
-        this.CheckRotateUp = false;
+        this.CheckRotateXAxisUp = false;
     }
 
-    private void RotateUp()
+    private void RotateXAxisUp()
     {
 
-        if (this.SelectedSolarPanels.Count > 0 && CheckRotateUp)
+        if (this.SelectedSolarPanels.Count > 0 && CheckRotateXAxisUp)
         {
            GroupSelectedSolarPanel.transform.Rotate(10f * Time.deltaTime, 0f, 0f);
         }
     }
 
-    public void CheckRotateDownMethodActive()
+    public void CheckRotateXAxisDownMethodActive()
     {
-        this.CheckRotateDown = true;
+        this.CheckRotateXAxisDown = true;
     }
 
-    public void CheckRotateDownMethodInactive()
+    public void CheckRotateXAxisDownMethodInactive()
     {
-        this.CheckRotateDown = false;
+        this.CheckRotateXAxisDown = false;
     }
 
-    private void RotateDown()
+    private void RotateXAxisDown()
     {
 
-        if (this.SelectedSolarPanels.Count > 0 && CheckRotateDown)
+        if (this.SelectedSolarPanels.Count > 0 && CheckRotateXAxisDown)
         {
             GroupSelectedSolarPanel.transform.Rotate(-10f * Time.deltaTime, 0f, 0f);
         }
     }
 
-    public void CheckRotateLeftMethodActive()
+    public void CheckRotateYAxisUpMethodActive()
     {
-        this.CheckRotateLeft = true;
+        this.CheckRotateYAxisUp = true;
     }
 
-    public void CheckRotateLeftMethodInactive()
+    public void CheckRotateYAxisUpMethodInactive()
     {
-        this.CheckRotateLeft = false;
+        this.CheckRotateYAxisUp = false;
     }
 
-    private void RotateLeft()
+    private void RotateYAxisUp()
     {
-        if (this.SelectedSolarPanels.Count > 0 && CheckRotateLeft)
+
+        if (this.SelectedSolarPanels.Count > 0 && CheckRotateYAxisUp)
         {
-            GroupSelectedSolarPanel.transform.Rotate(0f , 10f * Time.deltaTime, 0f);
+            GroupSelectedSolarPanel.transform.Rotate(0f,10f * Time.deltaTime, 0f);
         }
     }
 
-    public void CheckRotateRightMethodActive()
+    public void CheckRotateYAxisDownMethodActive()
     {
-        this.CheckRotateRight = true;
+        this.CheckRotateYAxisDown = true;
     }
 
-    public void CheckRotateRightMethodInactive()
+    public void CheckRotateYAxisDownMethodInactive()
     {
-        this.CheckRotateRight = false;
+        this.CheckRotateYAxisDown = false;
     }
 
-    private void RotateRight()
+    private void RotateYAxisDown()
     {
-        if (this.SelectedSolarPanels.Count > 0 && CheckRotateRight)
+
+        if (this.SelectedSolarPanels.Count > 0 && CheckRotateYAxisDown)
         {
-           GroupSelectedSolarPanel.transform.Rotate(0f, -10f * Time.deltaTime, 0f);
+            GroupSelectedSolarPanel.transform.Rotate(0f,-10f * Time.deltaTime, 0f);
+        }
+    }
+
+
+    public void CheckRotateZAxisUpMethodActive()
+    {
+        this.CheckRotateZAxisUp = true;
+    }
+
+    public void CheckRotateZAxisUpMethodInactive()
+    {
+        this.CheckRotateZAxisUp = false;
+    }
+
+    private void RotateZAxisUp()
+    {
+        if (this.SelectedSolarPanels.Count > 0 && CheckRotateZAxisUp)
+        {
+            GroupSelectedSolarPanel.transform.Rotate(0f , 0f,10f * Time.deltaTime);
+        }
+    }
+
+    public void CheckRotateZAxisDownMethodActive()
+    {
+        this.CheckRotateZAxisDown = true;
+    }
+
+    public void CheckRotateZAxisDownMethodInactive()
+    {
+        this.CheckRotateZAxisDown = false;
+    }
+
+    private void RotateZAxisDown()
+    {
+        if (this.SelectedSolarPanels.Count > 0 && CheckRotateZAxisDown)
+        {
+           GroupSelectedSolarPanel.transform.Rotate(0f,0f, -10f * Time.deltaTime);
         }
     }
 
@@ -296,6 +367,7 @@ public class SolarPanelController : MonoBehaviour
         foreach(GameObject g in SelectedSolarPanels)
         {
             Destroy(g);
+            NumberCurrentPanels--;
         }
         SelectedSolarPanels = new List<GameObject>();
         ActiveAndInactiveRightControllerPanel();
@@ -467,11 +539,53 @@ public class SolarPanelController : MonoBehaviour
         {
             if(raycastHit.transform.tag == "SolarPanelPosition")
             {
-                GameObject solar = raycastHit.transform.gameObject;
-                solar.tag = "SolarPanel";
-                solar.GetComponent<MeshRenderer>().material = SolarMaterial;
+                if(NumberSuggestPanels > NumberCurrentPanels)
+                {
+                    GameObject solar = raycastHit.transform.gameObject;
+                    solar.tag = "SolarPanel";
+                    solar.GetComponent<MeshRenderer>().material = SolarMaterial;
+                    NumberCurrentPanels++;
+                }
+                else
+                {
+                    ShowWarningLetterPanel("You Can't Add Solar Panel Number Suggest : " + NumberSuggestPanels + " And Curent Number : " + NumberCurrentPanels);
+                }
+
             }
         }
     }
 
+
+    private void CalcNumberSuggestPanel()
+    {
+        float num = Mathf.Floor(measureAreaScript.totalArea / 3);
+        // AreaPanel = 3 M Squer
+        int NumConv = (int) num - 1;
+
+        if(NumConv == -1)
+        {
+            NumberSuggestPanels = 0;
+        }
+        else
+        {
+            NumberSuggestPanels = NumConv;
+        }
+
+        SuggestSolarPanelText.text = "Number Suggest Solar : " + NumberSuggestPanels;
+        CurrentSolarPanelText.text = "Number Current Solar : " + NumberCurrentPanels;
+    }
+
+    private void ShowWarningLetterPanel(string text)
+    {
+        SuggestationPanel.SetActive(false);
+        WarningText.text = text;
+        WarningPanel.SetActive(true);
+        Invoke("DisableWarningLetterPanel", 5f);
+    }
+
+    private void DisableWarningLetterPanel()
+    {
+        WarningPanel.SetActive(false);
+        SuggestationPanel.SetActive(true);
+    }
 }

@@ -37,7 +37,7 @@ public class MeasureAreaScript : MonoBehaviour
     [SerializeField] private GameObject AreaDescriptionPanel;
     [SerializeField] private Text LabelTotalArea;
     [SerializeField] private Text LabelArea;
-    private float totalArea;
+    [HideInInspector] public float totalArea;
 
 
     // Start is called before the first frame update
