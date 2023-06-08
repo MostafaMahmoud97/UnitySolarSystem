@@ -10,6 +10,7 @@ TagManager:
   - SolarPanelPosition
   - Inverter
   - HVAC
+  - Generator
   layers:
   - Default
   - TransparentFX

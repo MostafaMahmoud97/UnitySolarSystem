@@ -4,32 +4,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HVACControllerScript : MonoBehaviour
+public class GeneratorControllerScript : MonoBehaviour
 {
+
     [Header("Settings")]
     [SerializeField] private Camera cam;
-    [SerializeField] private GameObject HVACGameObject;
-    [SerializeField] private GameObject ControllerHVACPanel;
+    [SerializeField] private GameObject GeneratorGameObject;
+    [SerializeField] private GameObject ControllerGeneratorPanel;
 
     [Header("Map Render")]
-    public GameObject map;
+    [SerializeField] private GameObject map;
 
     [Header("Suggest Panel Message")]
     [SerializeField] private GameObject SuggestationPanel;
-    [SerializeField] private Text CurrentHVACText;
+    [SerializeField] private Text CurrentGeneratorText;
     [SerializeField] private GameObject WarningPanel;
     [SerializeField] private Text WarningText;
 
     private RaycastHit raycastHit;
 
-    private bool AddHVACCheck;
-    private bool SelectedHVACCheck;
-    private bool MoveHVACCheck;
+    private bool AddGeneratorCheck;
+    private bool SelectedGeneratorCheck;
+    private bool MoveGeneratorCheck;
 
-    private GameObject InitHVAC;
-    private GameObject SelectedHVAC;
+    private GameObject InitGenerator;
+    private GameObject SelectedGenerator;
 
-    private int NumberHVAC;
+    private int NumberGenerator;
 
     private bool CheckRotateXAxisUp;
     private bool CheckRotateXAxisDown;
@@ -40,10 +41,10 @@ public class HVACControllerScript : MonoBehaviour
 
     private void Awake()
     {
-        AddHVACCheck = false;
-        SelectedHVACCheck = false;
-        MoveHVACCheck = false;
-        NumberHVAC = 0;
+        AddGeneratorCheck = false;
+        SelectedGeneratorCheck = false;
+        MoveGeneratorCheck = false;
+        NumberGenerator = 0;
     }
 
     // Start is called before the first frame update
@@ -55,109 +56,107 @@ public class HVACControllerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SelectHVAC();
+        SelectGenerator();
     }
 
     private void FixedUpdate()
     {
-        AddHVAC();
-        MoveHVAC();
+        AddGenerator();
+        MoveGenerator();
         RotateXAxisUp();
         RotateXAxisDown();
         RotateZAxisUp();
         RotateZAxisDown();
         RotateYAxisUp();
         RotateYAxisDown();
-
     }
 
-    public void CheckAddHVAC()
+    public void CheckAddGenerator()
     {
-        if(!SelectedHVACCheck && !MoveHVACCheck)
+        if (!SelectedGeneratorCheck && !MoveGeneratorCheck)
         {
-            AddHVACCheck = !AddHVACCheck;
-            if (AddHVACCheck)
+            AddGeneratorCheck = !AddGeneratorCheck;
+            if (AddGeneratorCheck)
             {
-                InitHVAC = Instantiate(HVACGameObject, new Vector3(0, 0, 0), Quaternion.identity);
+                InitGenerator = Instantiate(GeneratorGameObject, new Vector3(0, 0, 0), Quaternion.identity);
             }
             else
             {
-                Destroy(InitHVAC);
+                Destroy(InitGenerator);
             }
         }
         else
         {
-            if (SelectedHVACCheck)
+            if (SelectedGeneratorCheck)
             {
-                ShowWarningLetterPanel("Please Close Selected HVAC");
-            }
-            else if (MoveHVACCheck)
+                ShowWarningLetterPanel("Please Close Selected Generator");
+            }else if (MoveGeneratorCheck)
             {
-                ShowWarningLetterPanel("Please Close Move HVAC");
+                ShowWarningLetterPanel("Please Close Move Generator");
             }
         }
     }
 
-    private void AddHVAC()
+    private void AddGenerator()
     {
-        if (AddHVACCheck && !SelectedHVACCheck && !MoveHVACCheck)
+        if (AddGeneratorCheck && !SelectedGeneratorCheck && !MoveGeneratorCheck)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if (map.GetComponent<MapRenderer>().Raycast(ray, out MapRendererRaycastHit raycastHit))
             {
-                InitHVAC.transform.position = new Vector3(raycastHit.Point.x, raycastHit.Point.y + 0.0175754f, raycastHit.Point.z);
+                InitGenerator.transform.position = new Vector3(raycastHit.Point.x, raycastHit.Point.y + 0.0112264f, raycastHit.Point.z);
                 if (Input.GetMouseButtonDown(0))
                 {
-                    AddHVACCheck = false;
-                    NumberHVAC++;
-                    ShowNumberHVAC();
+                    NumberGenerator++;
+                    ShowNumberGenerator();
+                    AddGeneratorCheck = false;
                 }
             }
         }
     }
 
-    private void SelectHVAC()
+    private void SelectGenerator()
     {
-        if (Input.GetMouseButtonDown(0) && !AddHVACCheck && !MoveHVACCheck)
+        if (Input.GetMouseButtonDown(0) && !AddGeneratorCheck && !MoveGeneratorCheck)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out raycastHit))
             {
-                if (raycastHit.transform.tag == "HVAC")
+                if (raycastHit.transform.tag == "Generator")
                 {
-                    if (!SelectedHVACCheck)
+                    if (!SelectedGeneratorCheck)
                     {
-                        SelectedHVAC = raycastHit.transform.gameObject;
-                        SelectedHVACCheck = true;
-                        ControllerHVACPanel.SetActive(true);
+                        SelectedGenerator = raycastHit.transform.gameObject;
+                        SelectedGeneratorCheck = true;
+                        ControllerGeneratorPanel.SetActive(true);
                     }
                     else
                     {
-                        SelectedHVAC = null;
-                        SelectedHVACCheck = false;
-                        ControllerHVACPanel.SetActive(false);
+                        SelectedGenerator = null;
+                        SelectedGeneratorCheck = false;
+                        ControllerGeneratorPanel.SetActive(false);
                     }
                 }
             }
         }
     }
 
-    public void CheckMoveHVAC()
+    public void CheckMoveGenerator()
     {
-        MoveHVACCheck = true;
+        MoveGeneratorCheck = true;
     }
 
-    private void MoveHVAC()
+    private void MoveGenerator()
     {
-        if (MoveHVACCheck)
+        if (MoveGeneratorCheck)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if (map.GetComponent<MapRenderer>().Raycast(ray, out MapRendererRaycastHit raycastHit))
             {
-                SelectedHVAC.transform.position = new Vector3(raycastHit.Point.x, raycastHit.Point.y + 0.0175754f, raycastHit.Point.z);
+                SelectedGenerator.transform.position = new Vector3(raycastHit.Point.x, raycastHit.Point.y + 0.0112264f, raycastHit.Point.z);
                 if (Input.GetMouseButtonDown(0))
                 {
-                    MoveHVACCheck = false;
+                    MoveGeneratorCheck = false;
                 }
             }
         }
@@ -176,9 +175,9 @@ public class HVACControllerScript : MonoBehaviour
     private void RotateXAxisUp()
     {
 
-        if (SelectedHVACCheck && CheckRotateXAxisUp)
+        if (SelectedGeneratorCheck && CheckRotateXAxisUp)
         {
-            SelectedHVAC.transform.Rotate(15f * Time.deltaTime, 0f, 0f);
+            SelectedGenerator.transform.Rotate(15f * Time.deltaTime, 0f, 0f);
         }
     }
 
@@ -195,9 +194,9 @@ public class HVACControllerScript : MonoBehaviour
     private void RotateXAxisDown()
     {
 
-        if (SelectedHVACCheck && CheckRotateXAxisDown)
+        if (SelectedGeneratorCheck && CheckRotateXAxisDown)
         {
-            SelectedHVAC.transform.Rotate(-15f * Time.deltaTime, 0f, 0f);
+            SelectedGenerator.transform.Rotate(-15f * Time.deltaTime, 0f, 0f);
         }
     }
 
@@ -214,9 +213,9 @@ public class HVACControllerScript : MonoBehaviour
     private void RotateYAxisUp()
     {
 
-        if (SelectedHVACCheck && CheckRotateYAxisUp)
+        if (SelectedGeneratorCheck && CheckRotateYAxisUp)
         {
-            SelectedHVAC.transform.Rotate(0f, 15f * Time.deltaTime, 0f);
+            SelectedGenerator.transform.Rotate(0f, 15f * Time.deltaTime, 0f);
         }
     }
 
@@ -233,9 +232,9 @@ public class HVACControllerScript : MonoBehaviour
     private void RotateYAxisDown()
     {
 
-        if (SelectedHVACCheck && CheckRotateYAxisDown)
+        if (SelectedGeneratorCheck && CheckRotateYAxisDown)
         {
-            SelectedHVAC.transform.Rotate(0f, -15f * Time.deltaTime, 0f);
+            SelectedGenerator.transform.Rotate(0f, -15f * Time.deltaTime, 0f);
         }
     }
 
@@ -252,9 +251,9 @@ public class HVACControllerScript : MonoBehaviour
 
     private void RotateZAxisUp()
     {
-        if (SelectedHVACCheck && CheckRotateZAxisUp)
+        if (SelectedGeneratorCheck && CheckRotateZAxisUp)
         {
-            SelectedHVAC.transform.Rotate(0f, 0f, 15f * Time.deltaTime);
+            SelectedGenerator.transform.Rotate(0f, 0f, 15f * Time.deltaTime);
         }
     }
 
@@ -270,30 +269,30 @@ public class HVACControllerScript : MonoBehaviour
 
     private void RotateZAxisDown()
     {
-        if (SelectedHVACCheck && CheckRotateZAxisDown)
+        if (SelectedGeneratorCheck && CheckRotateZAxisDown)
         {
-            SelectedHVAC.transform.Rotate(0f, 0f, -15f * Time.deltaTime);
+            SelectedGenerator.transform.Rotate(0f, 0f, -15f * Time.deltaTime);
         }
     }
 
-    public void DeleteHVAC()
+    public void DeleteGenerator()
     {
-        if (SelectedHVACCheck)
+        if (SelectedGeneratorCheck)
         {
-            Destroy(SelectedHVAC);
-            AddHVACCheck = false;
-            SelectedHVACCheck = false;
-            ControllerHVACPanel.SetActive(false);
-            MoveHVACCheck = false;
-            SelectedHVAC = null;
-            NumberHVAC--;
-            ShowNumberHVAC();
+            Destroy(SelectedGenerator);
+            AddGeneratorCheck = false;
+            SelectedGeneratorCheck = false;
+            ControllerGeneratorPanel.SetActive(false);
+            MoveGeneratorCheck = false;
+            SelectedGenerator = null;
+            NumberGenerator--;
+            ShowNumberGenerator();
         }
     }
 
-    private void ShowNumberHVAC()
+    private void ShowNumberGenerator()
     {
-        CurrentHVACText.text = "Number Current HVAC : " + NumberHVAC;
+        CurrentGeneratorText.text = "Number Current Generator : " + NumberGenerator;
     }
 
     private void ShowWarningLetterPanel(string text)
@@ -309,5 +308,4 @@ public class HVACControllerScript : MonoBehaviour
         WarningPanel.SetActive(false);
         SuggestationPanel.SetActive(true);
     }
-
 }

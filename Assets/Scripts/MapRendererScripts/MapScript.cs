@@ -33,6 +33,8 @@ public class MapScript : MonoBehaviour
     private string ImageBaseUrl = "http://openweathermap.org/img/wn/";
     private Sprite ImageLogoSpirate;
 
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +42,7 @@ public class MapScript : MonoBehaviour
         this.ShowDate();
         this.InitUrl();
         StartCoroutine(SimpleGetRequest());
+        
     }
 
     // Update is called once per frame
@@ -52,7 +55,7 @@ public class MapScript : MonoBehaviour
     {
         map = GetComponent<MapRenderer>();
 
-        Debug.Log(map.Center);
+        //Debug.Log(map.Center);
         var newCenter = new LatLon(this.lat, this.lang);
         map.Center = newCenter;
     }
@@ -85,7 +88,7 @@ public class MapScript : MonoBehaviour
 
     private void ShowDataInWeatherPanel(WeatherHelpClass Weather)
     {
-        Debug.Log(WeatherPanelGameObject.transform.GetChild(1).gameObject);
+        //Debug.Log(WeatherPanelGameObject.transform.GetChild(1).gameObject);
         // Weather Text
         WeatherPanelGameObject.transform.GetChild(1).gameObject.GetComponent<Text>().text = Weather.main_weather;
         // Weather Temp
@@ -130,7 +133,7 @@ public class MapScript : MonoBehaviour
 
         yield return www.SendWebRequest();
 
-        if(www.isNetworkError || www.isHttpError)
+        if(www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
         {
             Debug.LogError(www.error);
         }
@@ -151,7 +154,7 @@ public class MapScript : MonoBehaviour
 
         yield return www.SendWebRequest();
 
-        if (www.isNetworkError || www.isHttpError)
+        if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
         {
             Debug.LogError(www.error);
         }
