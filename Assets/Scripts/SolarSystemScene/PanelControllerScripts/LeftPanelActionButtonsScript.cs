@@ -6,6 +6,7 @@ public class LeftPanelActionButtonsScript : MonoBehaviour
 {
     [SerializeField] private GameObject AddProductsPanel;
     [SerializeField] private GameObject MeasurePanel;
+    [SerializeField] private GameObject UserInformationPanel;
 
 
     public void DisibleAndEnableGameObject(int x)
@@ -21,6 +22,14 @@ public class LeftPanelActionButtonsScript : MonoBehaviour
             MeasurePanel.SetActive(!MeasurePanel.activeInHierarchy);
         }
 
+        if(!AddProductsPanel.activeInHierarchy && !MeasurePanel.activeInHierarchy)
+        {
+            UserInformationPanel.SetActive(true);
+        }
+        else
+        {
+            UserInformationPanel.SetActive(false);
+        }
 
     }
 

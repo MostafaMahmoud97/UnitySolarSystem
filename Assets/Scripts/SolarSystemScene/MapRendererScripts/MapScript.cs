@@ -11,8 +11,7 @@ public class MapScript : MonoBehaviour
 {
     [Header("Map Render")]
     [SerializeField] private MapRenderer map;
-    [SerializeField] private double lat;
-    [SerializeField] private double lang;
+    
 
     [Header("Date Display")]
     [SerializeField] private GameObject DisplayTime;
@@ -25,6 +24,8 @@ public class MapScript : MonoBehaviour
     [SerializeField] private GameObject WeatherPanelGameObject;
 
 
+    private double lat;
+    private double lang;
 
     private string baseUrl = "https://api.openweathermap.org/data/2.5/weather";
     private readonly string apiKey = "f1c4115f230a7818226e1e309b1d6cb8";
@@ -33,8 +34,12 @@ public class MapScript : MonoBehaviour
     private string ImageBaseUrl = "http://openweathermap.org/img/wn/";
     private Sprite ImageLogoSpirate;
 
-    
 
+    private void Awake()
+    {
+        lat = PlayerPrefs.GetFloat("lat");
+        lang = PlayerPrefs.GetFloat("lon");
+    }
     // Start is called before the first frame update
     void Start()
     {

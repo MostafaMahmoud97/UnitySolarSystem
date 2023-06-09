@@ -11,6 +11,8 @@ TagManager:
   - Inverter
   - HVAC
   - Generator
+  - LeadCard
+  - Undefined
   layers:
   - Default
   - TransparentFX
