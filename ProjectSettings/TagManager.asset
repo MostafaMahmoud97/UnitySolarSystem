@@ -13,6 +13,7 @@ TagManager:
   - Generator
   - LeadCard
   - Undefined
+  - PitchDegreePoint
   layers:
   - Default
   - TransparentFX

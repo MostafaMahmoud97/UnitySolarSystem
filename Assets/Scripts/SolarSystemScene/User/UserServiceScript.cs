@@ -23,7 +23,7 @@ public class UserServiceScript : MonoBehaviour
         UserName.text = PlayerPrefs.GetString("name");
         UserEmail.text = PlayerPrefs.GetString("email");
         LeadName.text = PlayerPrefs.GetString("lead_name");
-        LeadAddress.text = PlayerPrefs.GetString("lead_name");
+        LeadAddress.text = PlayerPrefs.GetString("address");
     }
 
     
