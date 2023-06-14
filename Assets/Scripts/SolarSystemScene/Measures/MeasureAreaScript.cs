@@ -19,11 +19,21 @@ public class MeasureAreaScript : MonoBehaviour
     [SerializeField] private GameObject InitPoint;
     [SerializeField] private GameObject LineRenderMap;
 
+    //Calc Total Area
+    [Header("Area Description Panel")]
+    [SerializeField] private GameObject AreaDescriptionPanel;
+    [SerializeField] private Text LabelTotalArea;
+    [SerializeField] private Text LabelArea;
+    [HideInInspector] public float totalArea;
+
     private RaycastHit raycastHit;
     private bool CheckAddPointBtnClick = false;
     private List<AreaClass> areaClasses;
     private AreaClass InitialClassArea;
     private GameObject PointTrack;
+
+    // For Report
+    [HideInInspector] public List<float> AreaReport;
 
 
     //Select Any Point
@@ -32,12 +42,7 @@ public class MeasureAreaScript : MonoBehaviour
     private bool checkSelectedPoint;
     private bool checkMovePoint;
 
-    //Calc Total Area
-    [Header("Area Description Panel")]
-    [SerializeField] private GameObject AreaDescriptionPanel;
-    [SerializeField] private Text LabelTotalArea;
-    [SerializeField] private Text LabelArea;
-    [HideInInspector] public float totalArea;
+    
 
 
     // Start is called before the first frame update
@@ -374,8 +379,9 @@ public class MeasureAreaScript : MonoBehaviour
     {
         totalArea = 0;
         float area = 0;
+        AreaReport = new List<float>();
         //Calac selected Point area
-        if(PointArea != null)
+        if (PointArea != null)
         {
             AreaClass areaClassX = GetAreaClassFromPoint(PointArea);
             if(areaClassX.Targets.Count >= 3)
@@ -399,7 +405,9 @@ public class MeasureAreaScript : MonoBehaviour
                 this.CalcSlops(areaClass);
                 this.ConvertVec3ToVec2New(areaClass);
                 //Debug.Log("Area : "+CalcAreaOfPoligon(areaClass));
-                totalArea += CalcAreaOfPoligon(areaClass);
+                float areax = CalcAreaOfPoligon(areaClass);
+                totalArea += areax;
+                AreaReport.Add(areax);
             }
 
         }

@@ -31,7 +31,7 @@ public class MeasurePitchDegree : MonoBehaviour
 
 
     private GameObject InitPitchDegreeTool;
-    private List<GameObject> PitchDegreeTools;
+    [HideInInspector] public List<GameObject> PitchDegreeTools;
     private GameObject SelectedPitchDegreeTool;
 
 

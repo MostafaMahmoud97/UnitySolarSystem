@@ -30,7 +30,7 @@ public class GeneratorControllerScript : MonoBehaviour
     private GameObject InitGenerator;
     private GameObject SelectedGenerator;
 
-    private int NumberGenerator;
+    [HideInInspector] public int NumberGenerator;
 
     private bool CheckRotateXAxisUp;
     private bool CheckRotateXAxisDown;

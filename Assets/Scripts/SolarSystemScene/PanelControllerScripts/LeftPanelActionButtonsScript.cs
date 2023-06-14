@@ -6,6 +6,7 @@ public class LeftPanelActionButtonsScript : MonoBehaviour
 {
     [SerializeField] private GameObject AddProductsPanel;
     [SerializeField] private GameObject MeasurePanel;
+    [SerializeField] private GameObject SettingPanel;
     [SerializeField] private GameObject UserInformationPanel;
 
 
@@ -21,8 +22,12 @@ public class LeftPanelActionButtonsScript : MonoBehaviour
         {
             MeasurePanel.SetActive(!MeasurePanel.activeInHierarchy);
         }
+        else if (x == 3)
+        {
+            SettingPanel.SetActive(!SettingPanel.activeInHierarchy);
+        }
 
-        if(!AddProductsPanel.activeInHierarchy && !MeasurePanel.activeInHierarchy)
+        if (!AddProductsPanel.activeInHierarchy && !MeasurePanel.activeInHierarchy && !SettingPanel.activeInHierarchy)
         {
             UserInformationPanel.SetActive(true);
         }
@@ -38,9 +43,17 @@ public class LeftPanelActionButtonsScript : MonoBehaviour
         if(x == 1)
         {
             MeasurePanel.SetActive(false);
-        }else if(x == 2)
+            SettingPanel.SetActive(false);
+        }
+        else if(x == 2)
         {
             AddProductsPanel.SetActive(false);
+            SettingPanel.SetActive(false);
+        }
+        else if (x == 3)
+        {
+            AddProductsPanel.SetActive(false);
+            MeasurePanel.SetActive(false);
         }
 
     }

@@ -29,7 +29,7 @@ public class InverterScript : MonoBehaviour
 
     private GameObject InitInverter;
 
-    private int NumberInverter;
+    [HideInInspector] public int NumberInverter;
     private int NumberSuggestInverter;
 
     private bool CheckRotateYAxisDown;
@@ -98,7 +98,8 @@ public class InverterScript : MonoBehaviour
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if(map.GetComponent<MapRenderer>().Raycast(ray,out MapRendererRaycastHit raycastHit))
             {
-                InitInverter.transform.position = new Vector3(raycastHit.Point.x,raycastHit.Point.y,raycastHit.Point.z + 0.0031485f);
+                InitInverter.transform.position = new Vector3(raycastHit.Point.x,raycastHit.Point.y,raycastHit.Point.z);
+                InitInverter.transform.Translate(new Vector3(0, 0, 0.0031485f));
                 if (Input.GetMouseButtonDown(0))
                 {
                     NumberInverter++;
@@ -145,7 +146,8 @@ public class InverterScript : MonoBehaviour
             Ray ray = cam.ScreenPointToRay (Input.mousePosition); 
             if(map.GetComponent<MapRenderer>().Raycast(ray,out MapRendererRaycastHit raycastHit))
             {
-                InitInverter.transform.position = new Vector3(raycastHit.Point.x,raycastHit.Point.y,raycastHit.Point.z + 0.0031485f);
+                InitInverter.transform.position = new Vector3(raycastHit.Point.x,raycastHit.Point.y,raycastHit.Point.z);
+                InitInverter.transform.Translate(new Vector3(0, 0, 0.0031485f));
                 if (Input.GetMouseButtonDown(0))
                 {
                     MoveInverterCheck = false;

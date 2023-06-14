@@ -53,8 +53,8 @@ public class SolarPanelController : MonoBehaviour
     private List<GameObject> PositionPanelsDown;
     private List<GameObject> PositionPanelsLift;
 
-    private int NumberCurrentPanels;
-    private int NumberSuggestPanels;
+    [HideInInspector] public int NumberCurrentPanels;
+    [HideInInspector] public int NumberSuggestPanels;
 
 
 

@@ -29,7 +29,7 @@ public class HVACControllerScript : MonoBehaviour
     private GameObject InitHVAC;
     private GameObject SelectedHVAC;
 
-    private int NumberHVAC;
+    [HideInInspector] public int NumberHVAC;
 
     private bool CheckRotateXAxisUp;
     private bool CheckRotateXAxisDown;
